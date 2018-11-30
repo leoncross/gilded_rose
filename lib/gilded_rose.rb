@@ -4,6 +4,22 @@ class GildedRose
     @items = items
   end
 
+#  add special items to an array
+# special item method?
+
+# 'controler' method
+# name checker method
+# quality adjuster (special)
+# quality adjuster normal
+# sell in adjuster special
+# sell in adjuster normal
+
+
+
+
+
+
+
   def update_quality
     @items.each do |item|
       if item.name != "Aged Brie" and item.name != "Backstage passes to a TAFKAL80ETC concert"
