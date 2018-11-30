@@ -5,6 +5,7 @@ class GildedRose
     @lengendary_items = ["Sulfuras, Hand of Ragnaros"]
     @mature_quality_items = ["Aged Brie"]
     @ticket_items = ["Backstage passes to a TAFKAL80ETC concert"]
+
   end
 
   def update_quality
@@ -14,13 +15,10 @@ class GildedRose
         legendary
       elsif @mature_quality_items.include? @item.name
         mature_quality
-        process
       elsif @ticket_items.include? @item.name
         ticket
-        process
       else
         normal
-        process
       end
     end
   end
@@ -41,14 +39,17 @@ class GildedRose
     else
       item_quality_increase_1
     end
+    process
   end
 
   def mature_quality
     in_date ? item_quality_increase_1 : item_quality_increase_2
+    process
   end
 
   def normal
     in_date ? item_quality_decrease_1 : item_quality_decrease_2
+    process
   end
 
   def process
@@ -92,7 +93,4 @@ class GildedRose
   def item_quality_decrease_2
     @item.quality -= 2
   end
-
-
-
 end
