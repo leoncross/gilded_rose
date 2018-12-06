@@ -5,21 +5,15 @@ class GildedRose
     @lengendary_items = ["Sulfuras, Hand of Ragnaros"]
     @mature_quality_items = ["Aged Brie"]
     @ticket_items = ["Backstage passes to a TAFKAL80ETC concert"]
-
   end
 
   def update_quality
     @items.each do |item|
       @item = item
-      if @lengendary_items.include? @item.name
-        legendary
-      elsif @mature_quality_items.include? @item.name
-        mature_quality
-      elsif @ticket_items.include? @item.name
-        ticket
-      else
-        normal
-      end
+      legendary
+      mature_quality
+      ticket
+      normal
     end
   end
 
@@ -30,25 +24,30 @@ class GildedRose
   end
 
   def ticket
+    return unless @ticket_items.include? @item.name
     if @item.sell_in <= 0
       @item.quality = 0
     elsif @item.sell_in < 6
-      item_quality_increase_3
+      item_quality('+' ,3)
     elsif @item.sell_in < 11
-      item_quality_increase_2
+      item_quality('+' ,2)
     else
-      item_quality_increase_1
+      item_quality('+', 1)
     end
     process
   end
 
   def mature_quality
-    in_date ? item_quality_increase_1 : item_quality_increase_2
+    return unless @mature_quality_items.include? @item.name
+    in_date ? item_quality('+' ,1) : item_quality('+' ,2)
     process
   end
 
   def normal
-    in_date ? item_quality_decrease_1 : item_quality_decrease_2
+    return if @mature_quality_items.include? @item.name
+    return if @ticket_items.include? @item.name
+    return if @lengendary_items.include? @item.name
+    in_date ? item_quality('-' ,1) : item_quality('-' ,2)
     process
   end
 
@@ -74,23 +73,8 @@ class GildedRose
     @item.quality = 50 if @item.quality > 50
   end
 
-  def item_quality_increase_1
-    @item.quality += 1
-  end
-
-  def item_quality_increase_2
-    @item.quality += 2
-  end
-
-  def item_quality_increase_3
-    @item.quality += 3
-  end
-
-  def item_quality_decrease_1
-    @item.quality -= 1
-  end
-
-  def item_quality_decrease_2
-    @item.quality -= 2
+  def item_quality(divisor, amount)
+    @item.quality += amount if divisor == '+'
+    @item.quality -= amount if divisor == '-'
   end
 end
